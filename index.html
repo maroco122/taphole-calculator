@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>탭 가공 기초홀 계산기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 5px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        /* 추가 정보 버튼 스타일 */
+        .info-button {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            color: green;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: none; /* 처음에는 숨김 */
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+        .info-button:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>탭 가공 기초홀 계산기</h2>
+        <label for="diameter">🔩 탭 외경 (mm)</label>
+        <input type="number" id="diameter" placeholder="예: 6" min="1" step="0.1" value="6">
+
+        <label for="pitch">📏 피치 (mm)</label>
+        <input type="number" id="pitch" placeholder="예: 1.0" min="0.1" step="0.1" value="1.0">
+
+        <button onclick="calculateTapHole()">기초홀 계산하기</button>
+
+        <div class="result" id="result">🔧 기초홀 크기 결과가 여기에 표시됩니다.</div>
+
+        <!-- 탭 드릴 차트 정보 버튼 (처음에는 숨김) -->
+        <button class="info-button" onclick="openTapChart()" id="infoButton">👉 "최적의 드릴 검색 결과 보기" 👈</button>
+    </div>
+
+    <script>
+        function calculateTapHole() {
+            let diameter = parseFloat(document.getElementById("diameter").value);
+            let pitch = parseFloat(document.getElementById("pitch").value);
+
+            // 입력값 유효성 검사
+            if (isNaN(diameter) || diameter <= 0 || isNaN(pitch) || pitch <= 0) {
+                document.getElementById("result").innerHTML = "⚠️ 올바른 값을 입력하세요.";
+                return;
+            }
+
+            // 기초홀 계산 (외경 - 피치)
+            let tapHole = diameter - pitch;
+            let formattedTapHole = tapHole.toFixed(2); // 소수점 2자리까지 표시
+
+            document.getElementById("result").innerHTML = 
+                `🔧 계산된 기초홀 크기: <b>${formattedTapHole} mm</b><br>
+                 ℹ️ 실제 작업 시 표준 드릴 사이즈를 확인하세요.`;
+
+            // 추가 정보 버튼 표시
+            let button = document.getElementById("infoButton");
+            button.style.display = "block";
+            button.style.opacity = "1";
+        }
+
+        // 탭 드릴 차트 링크 열기
+        function openTapChart() {
+            // 예시로 일반적인 탭 드릴 차트 링크 사용
+            let tapChartLink = "https://msearch.shopping.naver.com/search/all?adQuery=%ED%95%98%EC%9D%B4%EC%8A%A4%20%EB%93%9C%EB%A6%B4%20%EB%B9%84%ED%8A%B8%20%EC%84%B8%ED%8A%B8%2019pcs&frm=MOSCPRO&maxPrice=25000&minPrice=24800&naverPay=true&origQuery=%ED%95%98%EC%9D%B4%EC%8A%A4%20%EB%93%9C%EB%A6%B4%20%EB%B9%84%ED%8A%B8%20%EC%84%B8%ED%8A%B8%2019pcs&pagingIndex=1&pagingSize=40&productSet=total&query=%ED%95%98%EC%9D%B4%EC%8A%A4%20%EB%93%9C%EB%A6%B4%20%EB%B9%84%ED%8A%B8%20%EC%84%B8%ED%8A%B8%2019pcs&sort=rel&viewType=list";
+            window.open(tapChartLink, "_blank");
+        }
+
+        // 버튼 깜빡이기 기능
+        function blinkButton() {
+            let button = document.getElementById("infoButton");
+            let isVisible = true;
+
+            setInterval(() => {
+                if (button.style.display === "block") { // 버튼이 보일 때만 깜빡이게
+                    button.style.opacity = isVisible ? "0.2" : "1"; // 투명도 조정
+                    isVisible = !isVisible;
+                }
+            }, 1000); // 1초마다 깜빡이게 설정
+        }
+
+        // 깜빡이기 기능 실행
+        blinkButton();
+    </script>
+
+</body>
+</html>
